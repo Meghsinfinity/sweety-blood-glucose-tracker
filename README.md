@@ -47,8 +47,11 @@ sweety-blood-glucose-tracker/
 │   │   └── schema.sql
 │   ├── middleware/
 │   ├── routes/
+│   ├── scripts/
+│   │   └── seed.js
 │   ├── tests/
 │   ├── utils/
+│   ├── .env.example
 │   ├── package.json
 │   └── server.js
 │
@@ -68,7 +71,7 @@ sweety-blood-glucose-tracker/
 ### 1. Clone the repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/Meghsinfinity/sweety-blood-glucose-tracker.git
 cd sweety-blood-glucose-tracker
 ```
 
@@ -80,12 +83,6 @@ Execute:
 
 ```sql
 CREATE DATABASE sweety_db;
-```
-
-Connect to the database:
-
-```sql
-\c sweety_db
 ```
 
 ### 3. Create database tables
@@ -106,9 +103,23 @@ Navigate to the `server` folder:
 cd server
 ```
 
-Create a new file named `.env` inside the server folder.
+Create your local `.env` file by copying `.env.example`.
 
-Add the following configuration:
+On PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+On Git Bash:
+
+```bash
+cp .env.example .env
+```
+
+Update the `.env` file with your PostgreSQL credentials and a secure JWT secret.
+
+Example configuration:
 
 ```env
 PORT=5000
@@ -122,8 +133,6 @@ JWT_EXPIRES_IN=1d
 BCRYPT_ROUNDS=12
 CLIENT_ORIGIN=http://localhost:5173
 ```
-
-Replace `your_postgresql_password` with your PostgreSQL password.
 
 Generate a secure JWT secret using:
 
@@ -143,7 +152,22 @@ While inside the `server` directory:
 npm install
 ```
 
-### 6. Install frontend dependencies
+### 6. Seed the database
+
+Run the following command inside the `server` directory:
+
+```bash
+npm run seed
+```
+
+This creates a demo user and four sample glucose readings dated yesterday. The seed script can be run again without creating duplicate demo readings for the same date and slots.
+
+**Demo login credentials:**
+
+- Email: `demo@sweety.com`
+- Password: `SweetyDemo@123`
+
+### 7. Install frontend dependencies
 
 Open another terminal at the project root:
 
@@ -156,27 +180,23 @@ npm install
 
 ### Start the backend
 
-From the server directory:
+From the `server` directory:
 
 ```bash
 npm run dev
 ```
 
-Backend URL:
-
-`http://localhost:5000`
+Backend URL: http://localhost:5000
 
 ### Start the frontend
 
-From the client directory, in a separate terminal:
+From the `client` directory, in a separate terminal:
 
 ```bash
 npm run dev
 ```
 
-Frontend URL:
-
-`http://localhost:5173`
+Frontend URL: http://localhost:5173
 
 Open the frontend URL in your browser.
 
@@ -216,6 +236,27 @@ Sweety provides three reporting periods:
 
 Reports include the highest, lowest, average and total number of readings.
 
-## Note
+## Notes
+
+### Assumptions
+
+- Each user can record a maximum of four readings per day, one for each predefined time slot.
+- Glucose values are recorded as whole numbers in mg/dL.
+- Readings cannot be entered for future dates.
+- Each reading belongs to the authenticated user.
+- The demo account and sample readings are provided for testing purposes.
+
+### Future Improvements
+
+With additional development time, the application could be enhanced with:
+
+- Interactive glucose trend charts and visual analytics.
+- Exporting readings and reports as PDF or CSV.
+- Customizable glucose thresholds and alerts.
+- Password reset and email verification.
+- Improved mobile responsiveness and accessibility.
+- Automated deployment and continuous integration.
+
+## Disclaimer
 
 Sweety is a personal glucose tracking application intended to help users maintain records. It is not a medical diagnostic tool and does not replace professional medical advice.
